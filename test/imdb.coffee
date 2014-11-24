@@ -1,76 +1,41 @@
-{ Datomic } = require src + 'datomic'
-{ edn, find, f } = require src + 'edn'
-parse = require '../lib/parse'
-schema = require './schema'
+schema = require('./schema')
+find = require('../query')
+Datomic = require('..')
+edn = require('jsedn')
+
+imdb = new Datomic('localhost', 8888, 'db', 'imdb')
+
+add_movie = (title, rating) ->
+  imdb.transact("""[
+    {:db/id #db/id[:db.part/user]
+     :movie/title "#{title}"
+     :movie/rating #{rating}}]""")
 
 describe 'Sample with movies', ->
+  beforeNext ->
+    imdb.ready
+    .then(-> imdb.transact(schema.movies))
+    .then(-> add_movie('trainspotting', 8.2))
+    .then(-> add_movie('pulp fiction', 8.9))
+    .then(-> add_movie('fight club', 8.8))
+    .then(-> add_movie('lola rennt', 7.9))
 
-  imdb = new Datomic 'localhost', 8888, 'db', 'imdb'
+  it 'should return all', ->
+    imdb.q('[:find ?m :where [?m :movie/title]]')
+    .then((movies) -> parse(movies).length.should.be.above(1))
 
-  add_movie = (title, rating, done) -> 
-    imdb.transact "[{:db/id #db/id [:db.part/user] :movie/title \"#{title}\" :movie/rating #{rating}}]", done
+  it 'should find a movie over 8.8', ->
+    imdb.q('[:find ?t :where [?m :movie/title ?t] [?m :movie/rating ?r] [(> ?r  8.8)]]')
+    .then((movies) -> parse(movies).should.eql([['pulp fiction']]))
 
-  before (done) ->
-    
-    imdb.createDatabase ->
-      imdb.transact schema.movies, ->
-        add_movie 'pulp fiction', 8.9, ->
-          add_movie 'fight club', 8.8, ->
-            add_movie 'lola rennt', 7.9, ->
-              add_movie 'trainspotting', 8.2, ->
-                done()
+  it 'should find any movie', ->
+    imdb.q('[:find ?m :in $ ?t :where [?m :movie/title ?t]]',
+           {args: '[{:db/alias "db/imdb"} "fight club"]'})
+    .then((movie) -> parse(movie)[0][0].should.be.above(2))
 
-  describe 'pure json', ->
-  
-    it 'should return all', (done) ->
+  it 'should find trainspotting', ->
+    imdb.q('[:find ?e :where [?e :movie/title "trainspotting"]]')
+    .then((movies) -> imdb.entity(parse(movies)[0][0]))
+    .then((movie) -> parse(movie)['movie/title'].should.equal('trainspotting'))
 
-      imdb.q '[:find ?m :where [?m :movie/title]]', (err, movies)->
-        parse.json(movies).length.should.be.above 1
-        done()
-      
-   
-    it 'should find a movie over 8.8', (done) ->
-
-      imdb.q "[:find ?t :where [?m :movie/title ?t] [?m :movie/rating ?r] [(> ?r  8.8)]]", (err, movies) ->
-        parse.json(movies)[0][0].should.equal 'pulp fiction'
-        done()
-
-    it 'should find any movie', (done) ->
-
-      imdb.q "[:find ?m :in $ ?t :where [?m :movie/title ?t]]", 
-        {args: '[{:db/alias "db/imdb"} "fight club"]'},
-        (err, movie) ->
-          parse.json(movie)[0][0].should.be.above 2
-          done()
-
-  describe 'fluent interface', ->
-
-    it 'should find trainspotting', (done) ->
-      
-      imdb.q find('?m').where('?m', ':movie/title', 'trainspotting'), (err, movies) ->
-
-        imdb.entity parse.json(movies)[0][0], (err, movie) ->
-         
-          parse.json(movie)['movie/title'].should.equal 'trainspotting'
-          done()
-
-    it 'should find a movie under 8', (done) ->
-      
-      imdb.q find('?t')
-      .where('?m', ':movie/title', '?t')
-      .and('?m', ':movie/rating', '?r')
-      .lt('?r', 8), (err, movies) ->
-
-        parse.json(movies)[0][0].should.equal 'lola rennt'
-        done()
-          
-    it 'should find any movie', (done) ->
-
-      imdb.q find('?m')
-        .in('?t')
-        .where('?m', ':movie/title', '?t'),
-        {args: '[{:db/alias "db/imdb"} "trainspotting"]'},
-        (err, movie) ->
-
-          parse.json(movie)[0][0].should.be.above 4
-          done()
+parse = (edn_str) -> edn.toJS(edn.parse(edn_str))
