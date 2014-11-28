@@ -1,4 +1,4 @@
-src=index.js query.js test/datomic.js test/imdb.js test/query.js test/schema.js
+src=query.js test/datomic.js test/imdb.js test/query.js test/schema.js
 
 serve: node_modules compile
 	@node_modules/serve/bin/serve -op 61172
