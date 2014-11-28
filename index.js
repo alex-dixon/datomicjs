@@ -1,6 +1,6 @@
 var serialize = require('serialize-edn')
 var request = require('solicit')
-var parse = require('parse-edn')
+require('parse-edn/register')
 var merge = require('merge')
 
 function Datomic(server, port, alias, name) {
@@ -25,16 +25,14 @@ Datomic.prototype.transact = function(data) {
 }
 
 Datomic.prototype.entity = function(id, opts) {
-  return get(this.db_uri_ + 'entity')
-    .query(merge({e: id}, opts))
-    .then(parse)
+  return get(this.db_uri_ + 'entity').query(merge({e: id}, opts))
 }
 
 Datomic.prototype.q = function(query, opts) {
   return get(this.root + 'api/query').query(merge({
     args: '[{:db/alias "' + this.db_alias + '"}]',
     q: query
-  }, opts)).then(parse)
+  }, opts))
 }
 
 function get(uri) {

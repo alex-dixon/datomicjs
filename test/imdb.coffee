@@ -30,7 +30,7 @@ describe 'Sample with movies', ->
   it 'should find any movie', ->
     imdb.q('[:find ?m :in $ ?t :where [?m :movie/title ?t]]',
            {args: '[{:db/alias "db/imdb"} "fight club"]'})
-    .then((movies) -> movies.size.should.be.above(1))
+    .then((movies) -> movies.size.should.be.above(0))
 
   it 'should find trainspotting', ->
     imdb.q('[:find ?e :where [?e :movie/title "trainspotting"]]')

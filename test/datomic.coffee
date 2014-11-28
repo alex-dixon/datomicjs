@@ -3,9 +3,11 @@ Datomic = require('..')
 
 datomic = new Datomic('localhost', 8888, 'db', 'test')
 
+beforeNext(-> datomic.ready)
+
 it 'should make transactions', ->
   datomic.transact(schema.movies).then((future) ->
-    future.should.containEql(':db-after'))
+    future.has(':db-after').should.be.true)
 
 it 'should get an entity', ->
   datomic.entity(1).then((entity) ->

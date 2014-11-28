@@ -6,8 +6,10 @@
   "keywords": ["db", "datomic", "edn"],
   "license": "MIT",
   "dependencies": {
-    "merge": "yields/merge",
-    "solicit": "*"
+    "serialize-edn": "jkroso/serialize-edn",
+    "parse-edn": "jkroso/parse-edn",
+    "solicit": "jkroso/solicit",
+    "merge": "yields/merge"
   },
   "devDependencies": {
     "hydro-co": "hydrojs/co",
