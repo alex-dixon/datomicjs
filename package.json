@@ -10,7 +10,6 @@
     "solicit": "*"
   },
   "devDependencies": {
-    "jsedn": "limadelic/jsedn",
     "hydro-co": "hydrojs/co",
     "serve": "jkroso/serve",
     "hydro-fail-fast": "*",
