@@ -16,32 +16,12 @@ function Datomic(server, port, alias, name) {
     .then()
 }
 
-Datomic.prototype.storages = function() {
-  return get(this.root + 'data/')
-}
-
-Datomic.prototype.databases = function(alias) {
-  return get(this.root + 'data/' + alias + '/')
-}
-
-Datomic.prototype.db = function() {
-  return get(this.db_uri_)
-}
-
 Datomic.prototype.transact = function(data) {
   if (typeof data != 'string') data = serialize(data)
   return request.post(this.db_uri)
     .accept('application/edn')
     .send({'tx-data': data})
     .type('form')
-}
-
-Datomic.prototype.datoms = function(index, opts) {
-  return get(this.db_uri_ + 'datoms').query(merge({index: index}, opts))
-}
-
-Datomic.prototype.indexRange = function(attrid, opts) {
-  return get(this.db_uri_ + 'datoms').query(merge({a: attrid}, opts))
 }
 
 Datomic.prototype.entity = function(id, opts) {
