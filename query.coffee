@@ -1,4 +1,3 @@
-
 class Query
   constructor: (args...) ->
     @data = [':find ' + args.join(' ')]

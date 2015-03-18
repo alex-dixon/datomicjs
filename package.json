@@ -1,8 +1,8 @@
 {
   "name": "datomic",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "datomic driver",
-  "repository": "https://github.com/limadelic/datomicjs.git",
+  "repository": "https://github.com/kristianmandrup/datomicjs.git",
   "keywords": ["db", "datomic", "edn"],
   "license": "MIT",
   "dependencies": {
