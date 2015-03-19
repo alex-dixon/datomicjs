@@ -2,7 +2,7 @@ var Datomic, datomic, schema;
 
 schema = require('./schema');
 
-Datomic = require('..');
+Datomic = require('..').Datomic;
 
 datomic = new Datomic('localhost', 8888, 'db', 'test');
 

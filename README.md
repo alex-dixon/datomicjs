@@ -70,7 +70,11 @@ imdb.q(query, opts)
 
 Please continue ;)
 
+## Troubleshoot
 
+In your branch the test suite won't run because you changed the API of index.js from a function to an object. 
+
+You need to run `make datomic` and leave it running in a seperate terminal window while you run `make test` or `make serve`.
 
 
 

@@ -4,7 +4,7 @@ schema = require('./schema');
 
 find = require('../query');
 
-Datomic = require('..');
+Datomic = require('..').Datomic;
 
 imdb = new Datomic('localhost', 8888, 'db', 'imdb');
 
