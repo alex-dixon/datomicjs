@@ -10,6 +10,10 @@ js driver for datomic
 
 Requires that you have a Datomic server running and accessible.
 
+## Alternatives
+
+Another approach is to use [PossibleDB](https://github.com/runexec/PossibleDB) which uses Datascript with RethinkDB as a persistence layer.
+
 ## Dependencies
 
 Uses [solicit](https://github.com/jkroso/solicit) as HTTP service to interact with Datomic server via REST API.
