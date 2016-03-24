@@ -1,13 +1,13 @@
 {
-  "name": "datomic",
+  "name": "datomicjs",
   "version": "0.1.2",
   "description": "datomic driver",
   "repository": "https://github.com/kristianmandrup/datomicjs.git",
   "keywords": ["db", "datomic", "edn"],
   "license": "MIT",
+  "main": "./index.js",
   "dependencies": {
-    "serialize-edn": "jkroso/serialize-edn",
-    "parse-edn": "jkroso/parse-edn",
+    "jsedn": "^0.0.3",
     "solicit": "jkroso/solicit",
     "merge": "yields/merge"
   },

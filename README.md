@@ -18,11 +18,20 @@ Uses [solicit](https://github.com/jkroso/solicit) as HTTP service to interact wi
 
 ## Usage
 
-See `datomic.js`
+```js
+var dat = require('datomic');
+var Datomic = dat.Datomic;
+var Query = dat.Query;
+var datomic = Datomic(server, port, alias, name);
+```
 
-`Datomic(server, port, alias, name)`
+Or better, using ES2015 modules with destructuring:
 
-Create Schema:
+```js
+import { Datomic, Query} from 'datomic';
+```
+
+### Create Schema:
 
 ```
 schema.movies = '[
@@ -38,7 +47,7 @@ schema.movies = '[
 Then use...
 
 ```
-Datomic = require('datomicjs').Datomic;
+var Datomic = require('datomicjs');
 imdb = new Datomic('localhost', 8888, 'db', 'imdb');
 
 // use the DB
@@ -65,10 +74,9 @@ imdb.q(query, opts)
 ```
 
 ### EDN
+You can parse and serialize EDN via [jsedn](https://github.com/shaunxcode/jsedn) if you are used to work with the Clojure Map structures of Datomic. 
 
-[parse EDN](https://github.com/jkroso/parse-edn) and [serialize EDN](https://github.com/jkroso/serialize-edn) are used to work with the Clojure Map structures of Datomic. The interop with Clojure is done by taking a string with the Map syntax and serializing it to EDN (for queries etc) and conversely parsing a received EDN structure from Datomic (ie. data).
-
-Please continue ;)
+The interop with Clojure is done by taking a string with the Map syntax and serializing it to EDN (for queries etc) and conversely parsing a received EDN structure from Datomic (ie. data).
 
 ## Troubleshoot
 
