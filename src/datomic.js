@@ -1,9 +1,8 @@
 var request = require('solicit')
-
 var edn = require('jsedn');
 var merge = require('merge')
 
-class Datomic {
+export default class Datomic {
   constructor(server, port, alias, name) {
     // Allow options Object form:
     //  new Datomic({host: 'localhost', port: 8888, alias: 'db', name: 'imdb'});
@@ -11,10 +10,10 @@ class Datomic {
       Datomic(server.server || 'localhost', server.port || 8888, server.alias, server.name);
     }
 
-    this.root = 'http://' + server + ':' + port + '/'
-    this.db_alias = alias + '/' + name
-    this.db_uri = this.root + 'data/' + this.db_alias + '/'
-    this.db_uri_ = this.db_uri + '-/'
+    this.root = `http://${server}:${port}/`;
+    this.db_alias = `${alias}/${name}`;
+    this.db_uri = `${this.root}data/${this.db_alias}/`;
+    this.db_uri_ = `${this.db_uri}-/`;
     this.ready = request
       .post(`${this.root}data/${alias}/`)
       .accept('application/edn')
@@ -39,8 +38,8 @@ class Datomic {
   }
 
   q(query, opts) {
-    return this.(this.root + 'api/query').query(merge({
-      args: '[{:db/alias "' + this.db_alias + '"}]',
+    return this.get(`${this.root}api/query`).query(merge({
+      args: `[{:db/alias '${this.db_alias}'}]`,
       q: query
     }, opts))
   }
@@ -60,7 +59,7 @@ class Datomic {
   }
 
   // Get a list of Datomic databases from alias.
-  databases((aliasName) {
+  databases(aliasName) {
     aliasName = aliasName || this.db_alias;
     return this.get(`${this.db_uri}/data/${aliasName}/`);
   }
@@ -84,3 +83,6 @@ class Datomic {
   }
 }
 
+Datomic.create = function(obj) {
+  new Datomic(obj.server, obj.port, obj.alias, obj.name);
+}

@@ -26,10 +26,14 @@ Use npm tasks such as:
 
 `npm watch` - compile ES6 files in `/src` to ES5 in `/lib`
 
+Also check the `Makefile` for `make` tasks you can use.
+
 ## Requirements
 
 Requires that you have a Datomic server running and accessible.
 See [Datomic Getting Started](http://docs.datomic.com/getting-started.html)
+
+Also see [setup guide below](#Setup Datomic REST server)
 
 ## Alternatives
 
@@ -62,6 +66,10 @@ Using ES2015 modules with destructuring:
 ```js
 import { Datomic, Query, Datomex} from 'datomic';
 ```
+
+You can also use the factory function `Datomic.create` with an options Object:
+
+`var imdb = Datomic.create({alias: 'db', name: 'imdb'});`
 
 ### Create Schema:
 
@@ -125,9 +133,52 @@ You can parse and serialize EDN via [jsedn](https://github.com/shaunxcode/jsedn)
 
 The interop with Clojure is done by taking a string with the Map syntax and serializing it to EDN (for queries etc) and conversely parsing a received EDN structure from Datomic (ie. data).
 
-## Troubleshoot
+## Setup Datomic REST server
 
-In your branch the test suite won't run because you changed the API of index.js from a function to an object.
+1. Download and install Datomic free (it should work with Pro as well, but is not tested)
+
+  [http://downloads.datomic.com/free.html](http://downloads.datomic.com/free.html)
+
+2. Open terminal and start transactor
+
+    cd ~/projects/datomic-free-0.8.3862
+    bin/transactor config/samples/free-transactor-template.properties
+
+  It should display something like this:
+
+    System started datomic:free://localhost:4334/<DB-NAME>, storing data in: data
+
+3. Load the Seattle schema from datomic/sample directory. Here we'll create a "seattle" database in datomic.
+
+    cd ~/projects/datomic-free-0.8.3862
+    bin/shell
+
+  In the datomic shell, run the following commands:
+
+    uri = "datomic:free://localhost:4334/seattle";
+    Peer.createDatabase(uri);
+    conn = Peer.connect(uri);
+
+    schema_rdr = new FileReader("samples/seattle/seattle-schema.dtm");
+    schema_tx = Util.readAll(schema_rdr).get(0);
+    txResult = conn.transact(schema_tx).get();
+
+    data_rdr = new FileReader("samples/seattle/seattle-data0.dtm");
+    data_tx = Util.readAll(data_rdr).get(0);
+    txResult = conn.transact(data_tx).get();
+
+4. Open an other terminal and start Datomic REST
+
+    cd ~/projects/datomic-free-0.8.3862
+    bin/rest -p 9000 testing datomic:free://localhost:4334/
+
+  It should display something like this:
+
+    REST API started on port: 9000
+       testing = datomic:free://localhost:4334/
+
+
+## Troubleshoot
 
 You need to run `make datomic` and leave it running in a seperate terminal window while you run `make test` or `make serve`.
 
