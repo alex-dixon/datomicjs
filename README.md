@@ -102,7 +102,7 @@ var imdb = new Datomic({host: 'localhost', port: 8888, alias: 'db', name: 'imdb'
 
 imdb.transact([transaction, ...]);
 
-imdb.transact(schema.movies).then((future) => {
+imdb.transact(schema.movies).then(future => {
   console.log(future);
 }
 
@@ -117,22 +117,34 @@ var findMovieTitles = query('?m', '?title')
   .toString();
 
 // send query to DB
-imdb.q(findMovieTitles, opts);
+imdb.q(findMovieTitles, opts).then(data => {
+
+});
 
 // Get index data, by index
-imdb.datoms(index, opts);
+imdb.datoms(index, opts).then(data => {
+
+});
 
 // Get a range of index data
-imdb.indexRange(index, attrid, opts);
+imdb.indexRange(index, attrid, opts).then(data => {
+
+});
 
 // Get all storage
-imdb.storages();
+imdb.storages().then(data => {
+
+});
 
 // Get a list of Datomic databases from alias
-imdb.databases(aliasName);
+imdb.databases(aliasName).then(data => {
+
+});
 
 // Create a new empty DB
-imdb.createDb(name, aliasName);
+imdb.createDb(name, aliasName).then(data => {
+
+});
 ```
 
 ### API
