@@ -2,6 +2,10 @@
 
 js driver for Datomic via [REST API](http://docs.datomic.com/rest.html)
 
+Note: Under development... Please help out!
+
+Currently refactoring to ES6 with Babel
+
 ## Install
 
 Add to your `package.json` `dependencies`
@@ -15,6 +19,12 @@ Add to your `package.json` `dependencies`
 Then install:
 
 `npm install`
+
+## Development
+
+Use npm tasks such as:
+
+`npm watch` - compile ES6 files in `/src` to ES5 in `/lib`
 
 ## Requirements
 
