@@ -117,7 +117,22 @@ var findMovieTitles = query('?m', '?title')
   .toString();
 
 // send query to DB
-imdb.q(findMovieTitles, opts)
+imdb.q(findMovieTitles, opts);
+
+// Get index data, by index
+imdb.datoms(index, opts);
+
+// Get a range of index data
+imdb.indexRange(index, attrid, opts);
+
+// Get all storage
+imdb.storages();
+
+// Get a list of Datomic databases from alias
+imdb.databases(aliasName);
+
+// Create a new empty DB
+imdb.createDb(name, aliasName);
 ```
 
 ### API

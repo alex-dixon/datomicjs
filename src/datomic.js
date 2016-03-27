@@ -49,7 +49,7 @@ export default class Datomic {
   }
 
   // Get a range of index data.
-  index_range(index, attrid, opts) {
+  indexRange(index, attrid, opts) {
     return this.get(`${this.db_uri_}/datoms`).query({index: index, a: attrid});
   }
 
