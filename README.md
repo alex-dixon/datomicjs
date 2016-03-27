@@ -38,6 +38,7 @@ import { Datomic, Query} from 'datomic';
 ### Create Schema:
 
 ```
+var schema = {};
 schema.movies = '[
   {:db/id #db/id[:db.part/db]
    :db/ident :movie/title
@@ -52,21 +53,35 @@ Then use...
 
 ```
 var Datomic = require('datomicjs');
-imdb = new Datomic('localhost', 8888, 'db', 'imdb');
+
+// server, port, alias, name
+var imdb = new Datomic('localhost', 8888, 'db', 'imdb');
+
+// alternative in options Object form (default: localhost:8888)
+var imdb = new Datomic({host: 'localhost', port: 8888, alias: 'db', name: 'imdb'});
 
 // use the DB
-imdb.transact(...);
+// Each transaction must be an Array such as:
+// - [:db/id, -1, :name,  "Maksim"]
 
-datomic.transact(schema.movies).then((future) ->
+imdb.transact([transaction, ...]);
+
+imdb.transact(schema.movies).then((future) => {
   console.log(future);
+}
 
 
 // to build a Query
-find = require('datomicjs').Query;
-find('?m')
-  .where('?m', ':movie/title', 'trainspotting')
-  .toString()
-...
+query = require('datomicjs').Query;
+
+// Get titles from year 2000
+var findMovieTitles = query('?m', '?title')
+  .where('?m', ':movie/title', '?title')
+  .and('?m', ':movie/year', 2000))
+  .toString();
+
+// send query to DB
+imdb.q(findMovieTitles, opts)
 ```
 
 ### API
