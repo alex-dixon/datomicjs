@@ -1,14 +1,25 @@
 # datomicjs
 
-js driver for datomic
+js driver for Datomic via [REST API](http://docs.datomic.com/rest.html)
 
 ## Install
+
+Add to your `package.json` `dependencies`
+
+```json
+  "dependencies": {
+    "datomic": "kristianmandrup/datomicjs",
+    // ...
+```
+
+Then install:
 
 `npm install`
 
 ## Requirements
 
 Requires that you have a Datomic server running and accessible.
+See [Datomic Getting Started](http://docs.datomic.com/getting-started.html)
 
 ## Alternatives
 
@@ -16,9 +27,15 @@ Another approach is to use [PossibleDB](https://github.com/runexec/PossibleDB) w
 
 ## Dependencies
 
-Uses [solicit](https://github.com/jkroso/solicit) as HTTP service to interact with Datomic server via REST API.
+- [solicit](https://github.com/jkroso/solicit) as HTTP service to interact with Datomic server via REST API.
+- [hydro](https://github.com/hydrojs/hydro) for tests.
+- [jsedn](https://github.com/kristianmandrup/jsedn) to serialize EDN to string for transmission over HTTP.
 
-[hydro](https://github.com/hydrojs/hydro) is used for tests.
+### Includes
+
+- [Datomex](https://hexdocs.pm/datomex/) driver ported from Elixir (untested!)
+- Datomic (partial) API wrapper
+- Query builder
 
 ## Usage
 
@@ -26,13 +43,14 @@ Uses [solicit](https://github.com/jkroso/solicit) as HTTP service to interact wi
 var dat = require('datomic');
 var Datomic = dat.Datomic;
 var Query = dat.Query;
+var Datomex = dat.Datomex;
 var datomic = Datomic(server, port, alias, name);
 ```
 
-Or better, using ES2015 modules with destructuring:
+Using ES2015 modules with destructuring:
 
 ```js
-import { Datomic, Query} from 'datomic';
+import { Datomic, Query, Datomex} from 'datomic';
 ```
 
 ### Create Schema:
@@ -99,11 +117,14 @@ The interop with Clojure is done by taking a string with the Map syntax and seri
 
 ## Troubleshoot
 
-In your branch the test suite won't run because you changed the API of index.js from a function to an object. 
+In your branch the test suite won't run because you changed the API of index.js from a function to an object.
 
 You need to run `make datomic` and leave it running in a seperate terminal window while you run `make test` or `make serve`.
 
+### More resources
 
-
-
-
+- [Datomic REST API Setup](https://gist.github.com/g-k/3688420)
+- [datomic-in-the-browser](http://ragnard.github.io/2013/08/12/datomic-in-the-browser.html)
+- [datomic REST client in ruby](https://github.com/cldwalker/datomic-client)
+- [Datomex Elixir driver](https://github.com/edubkendo/datomex)
+- [datomic-json-rest](https://github.com/sullerandras/datomic-json-rest)
